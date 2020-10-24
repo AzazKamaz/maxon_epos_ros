@@ -15,6 +15,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>maxon_epos_driver</exec_depend>
+  <build_depend>maxon_epos_driver</build_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
