@@ -51,6 +51,8 @@ void EposMotor::init(ros::NodeHandle &root_nh, ros::NodeHandle &motor_nh, const 
     initMiscParams(motor_nh);
 
     VCS_NODE_COMMAND_NO_ARGS(SetEnableState, m_epos_handle);
+    
+    m_control_mode->activate();
 
     m_state_publisher = motor_nh.advertise<maxon_epos_msgs::MotorState>("get_state", 100);
     m_state_subscriber = motor_nh.subscribe("set_state", 100, &EposMotor::writeCallback, this);
@@ -81,7 +83,10 @@ void EposMotor::write(const double position, const double velocity, const double
 {
     try {
         if (m_control_mode) {
+            ROS_DEBUG_STREAM("Send: " << position << ", " << velocity << ", " << current << " to " << m_motor_name);
             m_control_mode->write(position, velocity, current);
+        } else {
+            ROS_DEBUG_STREAM("Can't send: " << position << ", " << velocity << ", " << current << " to " << m_motor_name);
         }
     } catch (const EposException &e) {
         ROS_ERROR_STREAM(e.what());
